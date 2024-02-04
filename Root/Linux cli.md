@@ -63,6 +63,9 @@ whoami vs whoami
 	- ```<command-1> | <command-2> | ....```
 	- ผลลัพธ์ของ command-1 จะถูกส่งไปหา command-2
 -  ค้นหาคำด้วย ```grep <keyword> <file-path>```
+	- -r recursive
+	- -i case insensitive
+	- -l แสดงแค่ไฟล์ที่เจอ
 การลบไฟล์
 - ใช้คำสั่ง ```rm <filename>```
 ข้อมูล File ต่าง ๆ
@@ -72,3 +75,47 @@ whoami vs whoami
 - ```ls -ld <filename>```
 - ```file <filename>```
 - ```stat <filename>```
+เปลี่ยนสิทธิ
+- ```cdmod <permission> <file or directory>```
+- ใช้เลขสามหลักในการกำหนด permission 
+	- เรียงดังนี้ user, group, other
+	- Permission : r(+4), w(+2), and x(+1)
+สร้าง link
+- ```ln  <target> <link>```
+- -s บอกว่าเป็น symbolic link to
+- EX. ```ln -s ~/part06e/myname ../part06```
+การ Redirect ผลลัพธ์ที่ได้
+- ผลลัพธ์ใช้ ```<command> >> <filepath>```
+	- ถ้ามีไฟล์ จะไปเขียนต่อข้อความที่มีอยู่เดิม
+- error ใช้ ```<command> 2> <filepath>```
+	- มี /dev/null ไว้เป็นถังขยะ
+- ทั้งคู่ใช้ ```<command> &> <filepath>```
+- ถ้าอยากให้แสดง output ที่หน้าจอพร้อมเอาผลลัพธ์ไปใส่ให้ใช้ ```<command> | tee <filepath>```
+การใช้อักษรพิเศษ
+- ใช้ `\` หน้าตัวพิเศษ เช่น `\# \'`
+- มีอีกเยอะเลย ตามนี้![Pasted image 20240201111759](./Pasted%20image%2020240201111759.png)
+- การใช้ `' ' ` ระบบจะไม่พยายามไปหาตัวแปล
+- การใช้ `" "` ระบบจะไปหาตัวแปลมาใส่แทนที่ `$<variable-name>`
+- ```
+  [~]$ echo 'My name is $USER.' 
+  My name is $USER. 
+  [~]$ echo "My name is $USER." 
+  My name is sysadmin.```
+set +x
+- เป็นการดูว่าจริง ๆ แล้ว shell ทำงานอะไรไปบ้าง
+ตัวแปล 
+- สร้างตัวแปล ```<variable-name>=<value>```
+- เป็น case sensitive นะจ๊ะ
+- ตอนเรียกใช้ ```$<variable-name>```
+- ถ้าเรียก export ไว้ข้างหน้าตอนสร้างตัวแปล มันจะส่งให้ child bash ด้วย![Pasted image 20240201112755](./Pasted%20image%2020240201112755.png)
+- ถ้าต้องการลบให้ใช้ `unset <variable-name>`
+- ถ้าต้องการดูตัวแปลที่มีอยู่ให้ใช้ `set`
+- System Variables
+	- ตัวใหญ่เสมอนะจ๊ะ![Pasted image 20240201113259](./Pasted%20image%2020240201113259.png)
+- $path เก็บ path ที่มีคำสั่งไว้โดยจะไล่ไปเรื่อย ๆ ตามลำดับ เจอ command อันไหนก่อนก็เอาอันนั้นเลย
+	- ตอนไหนที่เราสร้างคำสั่งเองแล้วไม่ได้สร้างใน path ที่กำหนด เราจะต้องใช้ ./ เรียกเอาเอง
+User Profiles
+- ทุกครั้งที่เปิด Bash เข้ามา ระบบจะเรียก /etc/profile เสมอ
+- ไม่ควรแก้ /etc/profile ตรง ๆ
+- ควรจะไปแก้ที่ .sh ใน profile.d แทน
+- จะไล่หาว่ามีอะไรให้รันบ้างโดยเริ่มจาก ~/.bash_profile , ~/.bash_login , ~/.profile ซึ่งจะเลือกรันแค่อันเดียว
