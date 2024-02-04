@@ -21,5 +21,24 @@ Professor git Repo
 #### Sub Topic
 [Template Syntax](./Template%20Syntax.md)
 
+ถ้าจะสร้าง variable ที่ให้ access DOM แบบ realtime ให้ใช้ 
+```
+import {ref} from 'vue'
+let count = ref(0)
+```
+ใน () คือค่าเริ่มต้น
+การเข้าถึงและแก้ไขค่านี้ ต้องใช้ .value ด้วย
+```
+<script setup>
+import {ref} from 'vue'
+let count = ref(0)
+setInterval(()=>{
+  count.value = count.value+1
+} , 100)
+</script>
 
-
+<template>
+  <p>{{ count }}</p>
+</template>
+```
+สามารถใช้ Reactive แทนได้ แต่ใช้ได้แค่ object และไม่ต้อง .value แล้ว

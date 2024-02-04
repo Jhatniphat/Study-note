@@ -1,0 +1,61 @@
+Query optimization
+- มีเป้าหมายในการ optimize resoauce
+- ค้นหาเส้นทางที่ประหยัดที่สุด
+- มีอยู่สองเทคนิคหลัก ๆ
+	- Heuristic rules (ไม่ค่อยได้ใช้แล้ว แต่อธิบายง่ายสุด)
+		- เป็นหลักการตั้งแต่เริ่มแรก
+		- Optimize ตามกฎ
+		- พยายามแปลงรูปให้ query มีประสิทธิภาพมากขึ้น
+		- 
+	- Cost-based (นิยมใช้ แต่อธิบายได้ยากมาก)
+	- ทั้งสองวิธีนี้จะนำหลักสถิติมาใช้ในการคิด 
+		- ทุก ๆ DBMS จะมีการอัพเดทสถิติตัวนี้อยู่เสมอ	
+- ตัวอย่าง Different strategies
+	- ขั้นตอนวิธีการ ![Pasted image 20240131104325](./Pasted%20image%2020240131104325.png)
+	- 1. join ให้หมดก่อนแล้วค่อยฟิลเตอร์
+	- 2. join พร้อมฟิลเตอร์ แล้วค่อยทำเงื่อนไขอื่นทีหลัง
+	- 3. ฟิลเตอร์ให้หมดแล้วค่อย join กัน ( Cost น้อยสุด เพราะเหลือแค่ข้อมูลที่จำเป็น)
+	- Cost ในแต่ละวิธี ![Pasted image 20240131104804](./Pasted%20image%2020240131104804.png)
+- ประเภทของการ Optimization 
+	- Dynamic query optimization
+		- มีการคำนวณใหม่ทุกรอบ ทำให้ข้อมูลหรือเส้นทาง Up to date เสมอ
+		- ต้อง Compile ก่อน execute ทุกครั้ง
+		- Performance อาจจะไม่ดีเท่า Static
+	- Static query optimization
+		- Compile รอบเดียว ครั้งต่อ ๆ ไปจะ execute เลยทันที
+		- อาจจะได้เส้นทางที่ไม่สะท้อนกับข้อมูลปัจจุบัน
+		- ผลลัพธ์ที่ได้อาจจะไม่สะท้อนตวามความเป็นจริง
+Phase of query processing
+- Query decomposition 
+	- จับ error ต้องเช็ค syntax เช็คข้อมูลว่ามีจริงมั้ย เช็คว่ามีสิทธิมั้ย
+	- แปลงเป็น Relational algebra expression 
+- Query optimization
+	- ออกมาเป็นเส้นทางแล้ว ว่าต้องทำอะไร
+- Code generation
+	- สร้าง Code สำหรับการ query ขึ้นมา
+- Runtime Query execution 
+	- เอา Code ไปรันที่ Database
+- ภาพรวม ![Pasted image 20240131105408](./Pasted%20image%2020240131105408.png)
+Query Decomposition
+- QD : Analysis
+	- วิเคราะห์ Syntax ว่าเขียนถูกต้องหรือไม่
+	- มีข้อมูลอยู่หรือไม่
+	- มีสิทธิหรือไม่
+- วิธีการแปลงเป็น Relational algebra
+	- leaf Node จะเป็นชื่อตาราง
+	- ระหว่างทางจะเป็นเงื่อนไข
+	- Rootnode จะเป็นผลลัพธ์
+	- สัญลักษณ์ต่าง ๆ
+		- ![Pasted image 20240131110657](./Pasted%20image%2020240131110657.png)
+- QD : Normalization
+	- จัดการเรื่องตรรกศาสตร์ พยายามปรับรูปให้เป็น And หรือ Or
+- QD : Sematic analysis
+	- เช็คในเชิงความหมายว่ามันเป็นไปได้จริงหรือไม่
+	- เช่น
+		- มีเงื่อนไขการ join หรือไม่
+		- มี meaning mี่ขัดแย้งกันหรือไม่ (Contradictory)
+			- เช่น where position = 'manager' and position = 'Assistant'	
+- QD : Simplification
+	- ปรับเงื่อนไขให้มันกระซับหรือง่ายขึ้น
+- QD : Query restructuring
+	- ปรับโครงสร้างทั้งหมดให้พร้อมกับการส่งต่อไป

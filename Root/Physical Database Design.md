@@ -158,7 +158,7 @@
 	- แต่มีข้อดีที่ประหยัดพื้นที่ของข้อมูล
 - เราอาจจะเลือกทำ Denormalization ในบางจุดหรือบางตาราง
 - ทำเพื่อความเร็วหรือ Performance เป็นหลัก
-- แลกมากับการเก็บข้อมูลซ้ำซ้อน การเก็บหลาย ๆ ที่
+- ==แลกมากับการเก็บข้อมูลซ้ำซ้อน การเก็บหลาย ๆ ที่==
 - การทำ Denormalization
 	- ปรับโครงสร้างตารางเดิม
 		- การเก็บข้อมูลเพิ่มเพื่อเก็บข้อมูลซ้ำ
@@ -169,3 +169,48 @@
 	- Performance ยังไม่เป็นที่น่าพอใจ
 	- ตารางนั้นมีการ Update บ่อยหรือไม่ ถ้าบ่อยก็ไม่เหมาะ
 	- ถูก query บ่อยหรือไม่ ถ้าบ่อยก็เหมาะ
+- Common situations for denormalization
+	- Combining 1:1 relationships
+		- ![Pasted image 20240131091800](./Pasted%20image%2020240131091800.png)
+		- จะมี Trade-off ที่จะมีข้อมูลที่เป็น null อยู่เยอะ
+		- กินพื้นที่มาก
+	- Duplicating non-key attributes in 1:* relationship to reduce joins
+		- เอาคอลัมน์ที่ไม่ใช่ key มาใส่ในอีกตารางด้วย
+		- ![Pasted image 20240131092752](./Pasted%20image%2020240131092752.png)
+		- เวลาอัพเดทจะต้องทำสองที่
+		- จะเห็นได้ชัดใน Lookup table หรือ Reference table ( ตารางที่ใช้อ้างอิงตัวย่อ เพื่อการประหยัดพื้นที่ )
+		- ก่อนทำ Denormalize![Pasted image 20240131093235](./Pasted%20image%2020240131093235.png)
+		- หลังทำ Denormalize ![Pasted image 20240131093246](./Pasted%20image%2020240131093246.png)
+	- Duplicating foreign key attributes in 1:* relationships to reduce joins
+		- Before ![Pasted image 20240131093803](./Pasted%20image%2020240131093803.png)
+		- After ![Pasted image 20240131094003](./Pasted%20image%2020240131094003.png)
+		- เห็นได้ชัดว่า query ง่ายและเร็วขึ้นมาก
+		- ![Pasted image 20240131094044](./Pasted%20image%2020240131094044.png)
+	- Duplicating attributes in *:* relationships to reduce joins
+		- บางครั้งเราอยากรู้แค่บางข้อมูล แต่จำเป็นต้อง join ทั้ง table มาเลยนำมาเก็บไว้อีกตารางด้วย
+		- ในกรณีนี้เราเก็บ Street เพิ่ม จะได้ไม่ต้อง join property ตลอด
+		- ![Pasted image 20240131094735](./Pasted%20image%2020240131094735.png)
+	- Introducing repeating groups
+		- มีการเก็บข้อมูลซ้ำ ๆ อยู่แล้ว เช่น หนึ่งสาขา มีหลายเบอร์ ถ้าเป็น Normalize ก็ต้องแยกตาราง
+		- ![Pasted image 20240131094906](./Pasted%20image%2020240131094906.png)
+	- Creating extract tables
+		- สร้างตารางใหม่ขึ้นมาเพื่อไม่ต้องไป query ตารางเดิมแล้วต้อง join เยอะ ๆ
+		- During peak times during the day ( Reports have to run ) จำเป็นต้องทำ Report เพราะมีการ query ข้อมูลเยอะในวัน ๆ เดียวกัน
+		- ไม่ควร run script ในช่วงเวลาปกติที่มีการใช้งานเยอะอยู่แล้ว
+	- Partitioning relations
+		- การแบ่งข้อมูลในตารางออกเป็นชิ้นเล็ก ๆ
+		- เช่นสมมุติว่ามีตารางลูกค้าเยอะ ๆ ก็ไม่ควรเก็บไว้ที่เดียวกัน อาจจะแบ่งเป็นภูมิภาค เป็นต้น
+		- เพื่อให้การแสกนหาข้อมูลเร็วขึ้น เช่นถ้าเราต้องการค้นหาข้อมูลลูกค้าที่ภาคเหนือ ก็ไม่จำเป็นต้องไปหาที่ภาคใต้ หรือตะวันออกด้วย
+		- มีวิธีการทำอยู่หลายแบบ
+			- Hash
+			- Range
+				- แยกข้อมูลเป็นช่วง ๆ
+			- List
+				- แล้วแต่เราจะ list เป็นอะไร เช่นตามภูมิภาค
+		- การแบ่งมีทั้งแบบ
+			-  Horizontal partitioning
+			- Vertical partitioning
+		- Disadvantages 
+			- มีความซับซ้อนในการแบ่งของข้อมูล
+		- Advantages
+			- ทำให้แสกนหาข้อมูลได้เร็วขึ้นตามเงื่อนไขของการแบ่ง

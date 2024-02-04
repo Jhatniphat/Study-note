@@ -120,3 +120,16 @@ Syntax : v-for
 ###### result :
 ![Pasted image 20240123111625.png](./Pasted%20image%2020240123111625.png)
 
+#### v-model
+Syntax : v-model
+```
+<script setup>
+	import { ref } from 'vue'
+	let nickname = ref('')
+</script>
+<template>
+	<input v-model="nickname" placeholder="your nickname">
+	<p>Your Nickname is {{ nickname }}</p>
+</template>
+```
+ใช้ในการติดตามค่าของ element นั้น ๆ
