@@ -12,7 +12,10 @@ Advanced Database
 Logical design vs Physical design
 	- Logical จะมุ่งเน้นไปที่การแปลงการ Conceptual ในกลายเป็น Data model  แบบ relational model
 	- Physical จะมุ่งเน้นไปที่ประสิทธิภาพการเข้าถึงของข้อมูล
-#### Query processingเ
+#### Query processing
 เป็นกระบวนการตั้งแต่เริ่มจนจบของการ query 
 ต้องเช็ค syntax เช็คข้อมูลว่ามีจริงมั้ย เช็คว่ามีสิทธิมั้ย
 [Query processing](./Query%20processing.md)
+
+[Database Security and Administration](./Database%20Security%20and%20Administration.md)
+
