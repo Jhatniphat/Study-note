@@ -1,6 +1,5 @@
 การเข้าใช้งาน
 	```ssh <user-name>@lvm65012.sit.kmutt.ac.th```
-	password : Aumkung777!
 ดู ip address
 	```ip a```
 Autocomplete and Command history
@@ -93,7 +92,7 @@ whoami vs whoami
 - ถ้าอยากให้แสดง output ที่หน้าจอพร้อมเอาผลลัพธ์ไปใส่ให้ใช้ ```<command> | tee <filepath>```
 การใช้อักษรพิเศษ
 - ใช้ `\` หน้าตัวพิเศษ เช่น `\# \'`
-- มีอีกเยอะเลย ตามนี้![Pasted image 20240201111759](./Pasted%20image%2020240201111759.png)
+- มีอีกเยอะเลย ตามนี้![Pasted image 20240201111759.png](./Pasted%20image%2020240201111759.png)
 - การใช้ `' ' ` ระบบจะไม่พยายามไปหาตัวแปล
 - การใช้ `" "` ระบบจะไปหาตัวแปลมาใส่แทนที่ `$<variable-name>`
 - ```
@@ -107,11 +106,11 @@ set +x
 - สร้างตัวแปล ```<variable-name>=<value>```
 - เป็น case sensitive นะจ๊ะ
 - ตอนเรียกใช้ ```$<variable-name>```
-- ถ้าเรียก export ไว้ข้างหน้าตอนสร้างตัวแปล มันจะส่งให้ child bash ด้วย![Pasted image 20240201112755](./Pasted%20image%2020240201112755.png)
+- ถ้าเรียก export ไว้ข้างหน้าตอนสร้างตัวแปล มันจะส่งให้ child bash ด้วย![Pasted image 20240201112755.png](./Pasted%20image%2020240201112755.png)
 - ถ้าต้องการลบให้ใช้ `unset <variable-name>`
 - ถ้าต้องการดูตัวแปลที่มีอยู่ให้ใช้ `set`
 - System Variables
-	- ตัวใหญ่เสมอนะจ๊ะ![Pasted image 20240201113259](./Pasted%20image%2020240201113259.png)
+	- ตัวใหญ่เสมอนะจ๊ะ![Pasted image 20240201113259.png](./Pasted%20image%2020240201113259.png)
 - $path เก็บ path ที่มีคำสั่งไว้โดยจะไล่ไปเรื่อย ๆ ตามลำดับ เจอ command อันไหนก่อนก็เอาอันนั้นเลย
 	- ตอนไหนที่เราสร้างคำสั่งเองแล้วไม่ได้สร้างใน path ที่กำหนด เราจะต้องใช้ ./ เรียกเอาเอง
 User Profiles
