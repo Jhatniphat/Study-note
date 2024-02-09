@@ -13,7 +13,7 @@ Security plan of Organization
 - การ Organization จะต้อง
 	- identify all possible threats -- วิเคราะห์ภัยคุมคามที่เป็นไปได้
 - Model
-	- ![Pasted image 20240207101835](./Pasted%20image%2020240207101835.png)
+	- ![Pasted image 20240207101835.png](./Pasted%20image%2020240207101835.png)
 	- Authentication - คุณเป็นใคร
 	- Authorization - ใครมีสิทธิ? ในการเข้าถึง
 	- Encryption - การเข้ารหัสข้อมูล
