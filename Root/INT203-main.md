@@ -44,3 +44,9 @@ setInterval(()=>{
 สามารถใช้ Reactive แทนได้ แต่ใช้ได้แค่ object และไม่ต้อง .value แล้ว
 
 computed() function ตอนที่มีการเปลี่ยนแปลงค่าที่กำหนด จะมีการเรียกฟังก์ชั่นขึ้นมาโดยอัตโนมัติ
+- `const currentPage10 = computed(() => currentPage.value * 10)`
+- ![Pasted image 20240213085845.png](./Pasted%20image%2020240213085845.png)
+- computed() จะทำให้ตัวแปลนั้นเป็น ref() โดยอัตโนมัติ ดังนั้นใน Script ต้อง .value ด้วย
+watch() function เป็นการจับตาดู source นั้น ๆ ที่เรากำหนด
+- ถ้ามีหลาย source ให้แนะนำเป็น watchEffect()
+- watch() เป็น lazy มันจะไม่ยอมทำตอนโหลดครั้งแรก
