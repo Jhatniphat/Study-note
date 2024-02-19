@@ -2,6 +2,7 @@
 [Process](./Process.md)
 [Ubuntu Package Management and Service Managers](./Ubuntu%20Package%20Management%20and%20Service%20Managers.md)
 #### Software Architecture Foundation
+##### [Architecture Characteristics](./Architecture%20Characteristics.md)
 ##### Software Architecture?
 
 ###### LAW of SW Arch
@@ -20,6 +21,7 @@
 - มองว่าใช้ Architecture Styles อะไร
 Architecture Characteristics
 - คุณสมบัติต่าง ๆ ของ Architecture
+- [Architecture Characteristics](./Architecture%20Characteristics.md)
 Design Principles
 - ข้อมูลรายละเอียดในแต่ละเรื่องย่อย ๆ
 - นิยมทำแบบ async messaging เพื่อเพิ่ม performance
