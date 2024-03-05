@@ -3,7 +3,7 @@
 ดู ip address
 	```ip a```
 ###### Autocomplete and Command history
-- Use TAB for autocomplete
+- Use ==TAB== for autocomplete
 - Arrow Up / Down to scroll history
 - ALT + < to jump to first command
 - ALT + > to jump to last command

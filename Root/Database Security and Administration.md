@@ -1,9 +1,18 @@
+#### Summary
+Computer-based Security Controls
+- Authorization
+- Access controls
+- Views
+- Backup and recovery
+- Integrity
+- Encryption
+- RAID technology
 Database Security includes
 - Hardware
 - Software
 - People
 - Data or Database
-มีเป้าหมายเพื่อป้องกันสถานการณ์ดังนี้
+มีเป้าหมายเพื่อป้องกันสถานการณ์ดังนี้ ( minimize loss)
 - heft and fraud ( การโจรกรรมข้อมูล )
 - Loss of confidentiality (maintain secrecy)  -- การรักษาความลับไม่ได้
 - Loss of privacy (protect individual data) -- รักษาความเป็นส่วนตัวของบุคคลไม่ได้
@@ -54,6 +63,7 @@ CREATE USER <username> IDENTIFIED BY <password> PASSWORD EXPIRE ACCOUNT LOCK| AC
 	PASSWORD_LOCK_TIME 2 // ให้ล็อค user กี่วัน ;
 	```
 - 
+#### Privileges
 ##### การให้สิทธิ User
 ###### Global Privileges
 ```
@@ -94,3 +104,104 @@ SHOW GRANTS FOR 'jeffrey'@'localhost';
 ```
 ถ้าไม่ใส่ For จะเป็นการเช็คสิทธิของตัวเอง
 ถ้ามีสิทธิเป็น USAGE คือแค่ล็อกอินได้
+
+#### Backup and Recovery
+###### ในหัวข้อนี้จะพูดถึงการ minimize loss อยู่ 2 ข้อ
+- Loss of integrity (invalid or corrupted data) 
+- Loss of availability (access data or system)
+##### Integrity
+หากควบคุมเรื่องเหล่านี้ได้ จะสามารถควบคุม Loss of integrity
+###### Integrity constraints
+- Integrity -> ความซื่อสัตย์
+- Constraints -> ข้อกำหนดต่าง ๆ
+- กฎข้อบังคับต่างๆ ที่ทำให้เกิดความถูกต้องสมบูรณ์ (ของข้อมูล)
+- มีส่วนร่วมในการดูแลรักษาระบบฐานข้อมูลให้มีความปลอดภัยโดยไม่ให้ข้อมูลเกิดความผิดพลาด
+###### Type of integrity constraints
+- Required Data
+- Domain constraints
+- Multiplicity
+- Entity integrity
+- Referential integrity
+- General constraints
+##### Errors and Failures
+###### Human Errors
+- อาจจะเกิดจากความไม่เข้าใจในตัวโปรแกรม
+- อาจจะเผลอลบข้อมูลใน DB
+- เป็นสาเหตุใหญ่ ๆ ของ Data loss
+###### Media Failures/Disk Failure
+- เกิดจาก Disk ได้รับความเสียหาย อาจจะเกิดได้ทั้งจากทางกายภาพและ Logic
+##### Backup and Recovery
+
+###### Backup 
+- คอย copy ฐานข้อมูลเป็นระยะ ๆ 
+- อาจจะต้องคุยกันว่าจะ Backup ทุก ๆ เวลาเท่าไหร่
+###### Journaling
+- ใช้ไฟล์ในการเก็บประวัติการเปลี่ยนแปลงด้วย
+- เช่น log ไฟล์
+###### Backup and Recovery Types
+- **Physical Backup ( Raw )**
+	- copy ไฟล์ ที่เป็น raw data เลย <- copy ไฟล์จาก Directory ในเครื่องเลย
+	- เหมาะกับ DB ขนาดใหญ่ ๆ เพราะมีความเร็วกว่า Logical Backup
+	- มีความเร็วในการ Backup มากกว่าเพราะไม่จำเป็นต้อง convert อะไร
+	- ขึ้นอยู่กับ Storage engine ที่เลือกใช้ด้วย ถ้า innoDB จะไม่ค่อยมีปัญหา แต่ถ้าเป็น MyIsam ก็อาจจะกำหนดอะไรได้ไม่เยอะ
+	- ข้อมูลที่ย้ายไปลงในอีกเครื่องหนึ่ง จำเป็นจะต้องมี config ที่เหมือนกันทุกประการ
+	- มีเครื่องมือ mySQL Backup ให้เลือกใช้ ( mysql enterprise นะจ๊ะ )
+- **Logical Backup**
+	- Backup อยู่ในรูปแบบของ Script
+	- เช่น ถ้า classicmodels มีปัญหา ก็นำ Script มา Run ใหม่
+	- มีความคล่องตัวสูงกว่า แต่เหมาะกับข้อมูลเล็ก ๆ
+	- มีความยืดหยุ่นกว่า จะย้ายไป run ในอีกเครื่องก็ได้ ขอแค่สามารถรัน mysql ได้
+	- เราจะใช้ ==mysqldump== เป็น tool ในการทำ ( เป็น CLI )
+	- ตอน restore กลับก็แค่นำ Script มา Run
+	- หากไม่ได้ใช้ .mysql แต่เป็นไฟล์แบบอื่น เช่น .csv สามารถใช้ ==mysql import==
+###### Online vs Offline Backups
+- Online Backups
+	- User ยังคงจะเข้ามาอ่านข้อมูลได้
+	- เป็นการ Backups ที่ไม่กระทบกับ User
+	- มีการ Locking ไม่ให้ User สามารถแก้ไขข้อมูลได้
+- Office Backups
+	- เป็นการ Shutdown DB แล้วค่อย Backups
+	- การันตีได้ว่าจะไม่มีใครมายุ่งกับข้อมูลขณะ Backups อยู่
+	- ควรทำใน DB ที่ไม่มี impact ต่อธุรกิจมากนัก
+###### Full vs Incremental Backup
+- Full Backups 
+	- Backups ทุกอย่าง
+- Incremental Backups 
+	- Backups เฉพาะสิ่งที่ถูกเปลี่ยนแปลง
+	- จำเป็นต้องมีการ Full Backups ก่อนอย่างน้อย 1 ครั้ง เพื่อเปรียบเทียบความ
+###### Full vs Point-in-Time ==Recovery==
+- ต้องนำ Full Backups มา Recovery ก่อน
+- แล้วนำ Incremental Backups หรือ logfile มา Restore ต่อจากเวลาตอนที่ Backups แบบ Full
+##### Concepts
+###### Backup Concepts in MySQL
+- ขึ้นอยู่กับ User
+	- End User : ปกติ ก็อาจจะ Backup ข้อมูลในตารางที่ตนเองอยู่ก่อนจะทำอะไร
+	- DBA : Backup ตารางด้วย EXPORT utility.
+	- DBA : Backup the database using Recovery Manager with BACKUP command 
+###### Recovery Concepts
+- ขึ้นอยู่กับ User
+	- End User : นำ Script ใหม่
+	- End User : ใช้เทคนิคการ Flashback ( ย้อนกลับไปในเวลานั้น ๆ )
+	- DBA : Recovery ตารางด้วย IMPORT utility.
+	- DBA : Recovery the database point in time using Backup files and Log files
+- In case of disk failures
+	- DBA : ใช้ Full database backups ในการ Recovery
+	- DBA : Recovery the database point in time using Backup files and Log files
+- In case System Crash
+	- DBMS จะทำการเช็ค log ไฟล์ เช่น REDO-type , UNDO-type แล้วทำการ Recovery ให้โดยอัตโนมัติ
+	- DBMS จะกู้คืนทุกอย่างที่ User Save แต่อันไหนที่ไม่มีใน log file หรือ User ไม่ได้ Save ก็จะถูกยกเลิก
+##### RAID ( Redundant Array of Independent Disk )
+###### concept
+- นำ disk มาต่อกันหลาย ๆ ลูก แล้วทำเสมือนเป็น disk ลูกเดียว
+- performance  Improvement เพราะ data striping เพราะสามารถอ่านข้อมูลได้หลาย ๆ disk พร้อม ๆ กัน
+- Reliability Improvement เพราะข้อมูลจะถูกเก็บข้าม disk แบบเท่าเทียมกัน
+###### Raid Level
+- RAID 0 Non-redundant 
+- RAID 1 Mirrored 
+- RAID 2 Memory-Style Error-Correcting Codes 
+- RAID 3 Bit-Interleaved Parity 
+- RAID 4 Block-Interleaved Parity
+- RAID 5 Block-Interleaved Distributed Parity <- ( ได้รับความนิยม )
+	- ถ้า Disk พังลูกเดียว สามารถกู้คืนได้
+- RAID 0+1 Non-redundant and Mirrored
+- ![Pasted image 20240228105643](./Pasted%20image%2020240228105643.png)![Pasted image 20240228105654](./Pasted%20image%2020240228105654.png)![Pasted image 20240228105708](./Pasted%20image%2020240228105708.png)

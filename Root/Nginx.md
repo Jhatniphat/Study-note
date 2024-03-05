@@ -23,3 +23,4 @@
 - อย่า reload nginx ทันทีนะ ให้ test ก่อนด้วย `sudo nginx -t`
 - ถ้ามีปัญหาอะไรให้ไปดูที่ /var/log/nginx/error.log
 - ถ้ามีไม่มีปัญหาอะไร ก็ reload ได้ด้วยการส่งสัญญาณให้ service nginx ด้วย `sudo nginx -s reload`
+#### Hosting SPA with Vue.js and Vite
