@@ -1,3 +1,4 @@
+เมื่อมี Request เข้ามา ก็จะแค่ส่งไฟล์กลับไป ดังนั้นเวลาเรียก Api จะให้ Browser ของ user เป็นคนเรียก ดังนั้นต้องเปิด firewall ให้ api ด้วย และมีประเด็นเรื่อง secure ด้วย
 #### Command
 ##### curl 
 - transfer a url
