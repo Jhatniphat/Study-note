@@ -1,4 +1,7 @@
 Advanced Database
+[Query processing](./Query%20processing.md)
+[Database Security and Administration](./Database%20Security%20and%20Administration.md)
+[Transaction Management](./Transaction%20Management.md)
 #### Database design stages
 ![Pasted image 20240123233355.png](./Pasted%20image%2020240123233355.png)
 - Conceptual Database Design

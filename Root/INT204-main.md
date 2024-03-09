@@ -62,4 +62,141 @@
 	- http://localhost:8080/h2-console
 		- แล้วเอา ![Pasted image 20240126102840.png](./Pasted%20image%2020240126102840.png) ใน terminal ไปใส่ใน JBDC:URL
 		- สามารถตั้งเองได้เช่น `spring.datasource.url = jdbc:h2:mem:demo` ใน application.properties
-	
+#### Exception Handling
+##### HTTP Status Codes
+- มีไว้เพื่อให้ฝั่ง client รู้ว่าสถานะเป็นอย่างไรบ้าง
+- ประกอบไปด้วยดังนี้ 
+	- 100-level (Informational) - server acknowledges a request
+	- 200-level (Success) - server completed the request as expected
+	- 300-level (Redirection) - client needs to perform further actions to complete the request
+	- 400-level (Client error) - client sent an invalid request
+	- 500-level (Server error) - server failed to fulfill a valid request due to an error with server
+##### Handling Errors
+- การส่ง Status code อาจจะแนบไปกับ Response body
+- วิธีที่ง่ายที่สุดคือการส่ง Error Code ซึ่งมีอยู่ทั่วไปดังนี้
+	- 400 Bad Request - ฝั่ง client ส่ง Request ไปไม่ดี ส่งผิด
+	- 401 Unauthorized - ฝั่ง client ไม่สามารถยืนยันตัวตนได้
+	- 403 Forbidden - ฝั่ง client ไม่มีสิทธิเข้าถึง Service นี้
+	- 404 Not Found - ฝั่ง Server ไม่เจอ Resouce ที่ขอมา
+	- 412 Precondition Failed - one or more conditions in the request header fields evaluated to false
+	- 500 Internal Server Error - ฝั่ง Server มีปัญหา แต่ไม่เกี่ยวกับ Client
+	- 503 Service Unavailable - the requested service is not available
+##### Standardized Response Bodies
+โดยปกติแล้วจะมีโครงสร้างดังนี้
+```json
+{
+     "type": "/errors/incorrect-user-pass",
+     "title": "Incorrect username or password.",
+     "status": 401,
+     "detail": "Authentication failed due to incorrect username or password.",
+     "instance": "/login/log/abc123"
+}
+```
+มีอยู่ 5 ส่วนด้วยกัน คือ
+- type - a URI identifier that categorizes the error
+- title - a brief, human-readable message about the error
+- status - the HTTP response code (optional)
+- detail - a human-readable explanation of the error
+- instance - a URI that identifies the specific occurrence of the error
+สามารถตั้งค่าให้ส่ง Error ไปแบบนี้ได้ด้วยการตั้งใน application.properties
+```properties
+server.error.include-stacktrace=on_param
+server.error.include-exception=true //บอกให้แสดง EXCEPTION เพิ่ม
+```
+##### Flow การทำงาน
+![Pasted image 20240308094442](./Pasted%20image%2020240308094442.png)
+ซึี่งในตัว Spring Boot จะมี Tool ไว้ในแล้ว เช่น
+###### @ResponseStatus
+- อนุญาตให้มีการแก้ไข HTTP status ในการตอบกลับ
+```java
+package sit.int204.classicmodelsservice.exceptions;
+import org.springframework.http.HttpStatus;  
+import org.springframework.web.bind.annotation.ResponseStatus;  
+  
+@ResponseStatus(HttpStatus.NOT_FOUND) //บอกว่าให้ส่ง Status ไปแบบใดห์ (404)  
+public class ItemNotFoundException extends RuntimeException{  
+    public ItemNotFoundException(String message) {  
+        super(message);  
+    }  
+}
+
+// extends RuntimeException ประกาศว่าเป็น RuntimeException
+```
+
+```java
+public Product getProductById(String productCode) { return  
+        repository.findById(productCode).orElseThrow(()->  
+                new ItemNotFoundException("Product code: "+ productCode + " does not exists !!!"));  
+}
+```
+จากโค้ดข้างต้น ถ้าหา Product ไม่เจอ ก็ให้ทำการ โยน ( `.orElseThrow` ) ให้ `ItemNotFoundException`
+ผลลัพธ์ที่ได้ตอนเกิด Exception
+```json
+{
+    "timestamp": "2024-03-08T03:27:18.713+00:00",
+    "status": 404,
+    "error": "Not Found",
+    "exception": "sit.int204.classicmodelsservice.exceptions.ItemNotFoundException",
+    "message": "Product code: 1 does not exists !!!",
+    "path": "/classic-models/products/1"
+}
+```
+###### @ExceptionHandler
+```java
+//At ProductController
+
+@ExceptionHandler(ItemNotFoundException.class)  
+@ResponseStatus(HttpStatus.NOT_FOUND)  
+public ItemNotFoundException handleItemNotFound(ItemNotFoundException exception){  
+    return exception;  
+}
+```
+จากโค้ดข้างต้น `handleItemNotFound` จะถูกเรียกตอนที่เกิด `ItemNotFoundException`
+ซึ่งผลลัพธ์จากการ `return exception;`
+```json
+{
+    "cause": null,
+    "stackTrace": [
+        {
+            "classLoaderName": null,
+            "moduleName": null,
+            "moduleVersion": null,
+            "methodName": "lambda$getProductById$0",
+            "fileName": "ProductService.java",
+            "lineNumber": 95,
+            "nativeMethod": false,
+            "className": "sit.int204.classicmodelsservice.services.ProductService"
+        },
+        {
+            "classLoaderName": null,
+            "moduleName": "java.base",
+            "moduleVersion": "18.0.2.1",
+            ...
+```
+###### @ControllerAdvice
+```java
+@RestControllerAdvice
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {  
+    @ExceptionHandler(ItemNotFoundException.class)  
+    @ResponseStatus(HttpStatus.NOT_FOUND)  
+    public ResponseEntity<ErrorResponse> handleItemNotFoundException(  
+            ItemNotFoundException exception, WebRequest request) {  
+        return buildErrorResponse(exception, HttpStatus.NOT_FOUND, request);  
+    }  
+  
+    @ExceptionHandler(MethodArgumentNotValidException.class)  
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)  
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(  
+            MethodArgumentNotValidException ex,  
+            WebRequest request  
+    ) {  
+        ErrorResp...
+```
+สามารถกำหนดได้ว่า หากไม่ได้สั่งเรียก Exception เอง ให้มาเรียกที่นี่ เราจะได้ไม่จำเป้นต้องไปกำหนดในทุก ๆ Controller
+##### Exception
+###### Force Exception
+เป็น Exception ที่ java จะบอกให้เราจัดการเอง ซึ่งเราสามารถ throw ไปที่อื่นได้
+![Pasted image 20240308101237](./Pasted%20image%2020240308101237.png)จากรูปจะเห็นว่ามีการฟ้องว่ายังไม่ได้ Handle exception ตัวไหน
+
+##### How Does Spring Process The Exception
+![Pasted image 20240308112239](./Pasted%20image%2020240308112239.png)

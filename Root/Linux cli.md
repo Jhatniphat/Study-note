@@ -118,3 +118,5 @@
 - ไม่ควรแก้ /etc/profile ตรง ๆ
 - ควรจะไปแก้ที่ .sh ใน profile.d แทน
 - จะไล่หาว่ามีอะไรให้รันบ้างโดยเริ่มจาก ~/.bash_profile , ~/.bash_login , ~/.profile ซึ่งจะเลือกรันแค่อันเดียว
+![Pasted image 20240307113505](./Pasted%20image%2020240307113505.png) 
+ziuxtG2$Ws
