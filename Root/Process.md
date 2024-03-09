@@ -14,9 +14,7 @@ Process Creation
 - **ออปชั่นของ ps**![Pasted image 20240208092950.png](./Pasted%20image%2020240208092950.png)
 ###### การดู pid ของ process นั้น ๆ 
 - ใช้ `pidof <process>`
-- ใช้ `pgrep <bash>`![Pasted image 20240208094449.png](./Pasted%20image%2020240208094449.png)
-###### คำสั่ง Top
-- เป็นการดู Top ของการใช้งาน Cpu
+- ใช้ `pgrep <bash>`! Top ของการใช้งาน Cpu
 - แสดงผลแบบ Realtime![Pasted image 20240208095142.png](./Pasted%20image%2020240208095142.png)
 - Task
 	- running - process ที่ทำงานอยู่
