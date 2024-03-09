@@ -1,9 +1,9 @@
-.  [Linux cli](./Linux%20cli.md)
+[Linux cli](./Linux%20cli.md)
 [Process](./Process.md)
 [Ubuntu Package Management and Service Managers](./Ubuntu%20Package%20Management%20and%20Service%20Managers.md)
 #### Software Architecture Foundation
 ##### [Architecture Characteristics](./Architecture%20Characteristics.md)
-#### [Software Architecture Style](./Software%20Architecture%20Style.md)
+[Software Architecture Style](./Software%20Architecture%20Style.md)
 ##### Software Architecture?
 
 ###### LAW of SW Arch
@@ -101,3 +101,10 @@ Decisions vs Principles
 		- ดู Characteristic ว่ามีอะไรบ้าง
 		- หาวิธีทำสิ่งต่าง ๆ ตาม Characteristic
 		- ![Pasted image 20240209164944.png](./Pasted%20image%2020240209164944.png)
+
+
+#### UML (Unified Modeling Language)
+- เป็นแนวทางหรือรูปแบบของ Diagram ที่เป็น มาตรฐานเดียวกัน
+- เพื่อให้สื่อสารระหว่างกันง่ายขึ้น
+- มีอยู่หลายแบบมากเช่น Class Diagram , Component Diagram , [Activity diagram](https://creately.com/blog/diagrams/activity-diagram-tutorial/) , [Sequence diagram](https://creately.com/blog/diagrams/the-basics-the-purpose-of-sequence-diagrams-part-1/) , [Usecase-Diagram](https://creately.com/blog/diagrams/use-case-diagram-relationships/)
+- 
