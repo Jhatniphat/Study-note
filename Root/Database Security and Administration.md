@@ -12,7 +12,7 @@ Database Security includes
 - Software
 - People
 - Data or Database
-มีเป้าหมายเพื่อป้องกันสถานการณ์ดังนี้ ( minimize loss)
+มีเป้าหมายเพื่อป้องกันสถานการณ์ดังนี้ ( minimize loss  )
 - heft and fraud ( การโจรกรรมข้อมูล )
 - Loss of confidentiality (maintain secrecy)  -- การรักษาความลับไม่ได้
 - Loss of privacy (protect individual data) -- รักษาความเป็นส่วนตัวของบุคคลไม่ได้
@@ -204,4 +204,4 @@ SHOW GRANTS FOR 'jeffrey'@'localhost';
 - RAID 5 Block-Interleaved Distributed Parity <- ( ได้รับความนิยม )
 	- ถ้า Disk พังลูกเดียว สามารถกู้คืนได้
 - RAID 0+1 Non-redundant and Mirrored
-- ![Pasted image 20240228105643](./Pasted%20image%2020240228105643.png)![Pasted image 20240228105654](./Pasted%20image%2020240228105654.png)![Pasted image 20240228105708](./Pasted%20image%2020240228105708.png)
+- ![Pasted image 20240228105643.png](./Pasted%20image%2020240228105643.png)![Pasted image 20240228105654.png](./Pasted%20image%2020240228105654.png)![Pasted image 20240228105708.png](./Pasted%20image%2020240228105708.png)

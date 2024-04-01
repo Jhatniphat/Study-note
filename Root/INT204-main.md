@@ -200,3 +200,86 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 ##### How Does Spring Process The Exception
 ![Pasted image 20240308112239](./Pasted%20image%2020240308112239.png)
+
+#### Bean Validation Basics
+- จัดเตรียมวิธีการตรวจสอบทั่วไปผ่านการประกาศข้อจำกัด ( constraint declaration )และ Metadata สำหรับแอปพลิเคชัน Java
+- Using by annotate domain model properties with declarative validation constraints which are then enforced by the runtime
+```java
+import jakarta.validation.constraints.NotBlank; 
+import jakarta.validation.constraints.NotNull; 
+import jakarta.validation.constraints.Size;
+@Table(name = "offices") 
+public class Office {
+	@Id
+	@Column(name = "officeCode", nullable = false, length = 10)
+	@NotBlank
+	private String officeCode;
+
+	@Column(name = "city", nullable = false, length = 15)
+	@Size(min=5,max = 15) 
+	@NotBlank
+	private String city;
+}
+```
+##### Validating a Request Body
+To validate the request body of an incoming HTTP request, we annotate the request body with the `@Valid` annotation in a REST controller
+##### Common Validation Annotations
+- `@NotNull` -> ต้องไม่เป็น Null
+- `@NotEmpty` -> ต้องไม่เป็น Null และ ไม่ Empty
+- `@Min` -> ต้องไม่ต่ำกว่าค่าที่กำหนด
+- `@Max` -> ต้องไม่สูงกว่าค่าที่กำนหด
+- `@Email` -> ต้องมีโครงสร้างเหมือน email address
+- `@Past` -> ต้องเป็นเวลาที่ผ่านไปแล้ว
+- `@PasrOrPresent` -> ต้องเป็นเวลาที่ผ่านไปแล้วหรือเป็นปัจจุบัน
+- `@Pattern` -> เป็น Pattern ที่กำหนดเองผ่าน Regular expression
+
+#### File Services
+##### SPA Running Environment
+
+![Pasted image 20240322093219](./Pasted%20image%2020240322093219.png)
+แบบแรกคือ
+![Pasted image 20240322093326](./Pasted%20image%2020240322093326.png)ใช้วิธีการนำไฟล์ไปเก็บไว้ใน VM
+แบบที่สองคือ
+![Pasted image 20240322093358](./Pasted%20image%2020240322093358.png)
+เอา file ไปเก็บไว้ที่ file/Storage Server อีกตัว
+วิธีที่สามคือ
+![Pasted image 20240322093444](./Pasted%20image%2020240322093444.png)
+เราจะไม่เขียน Services เอง แต่ไปใช้ source จากด้านนอกในการจัดการ file ในที่นี้ใช้ในตัวของ MINIO
+วิธีที่สี่คือ
+![Pasted image 20240322093745](./Pasted%20image%2020240322093745.png)
+กูจดไม่ทัน
+
+##### File Operation
+Upload
+- Send file – Form Data (Multipart) / File Only (FE)
+-  Read file data from Http Request (BE)
+-  Write file to storage (BE)
+Download
+- Return file URL / File content
+Delete
+- Read file name from Http Request
+- Remove file from storage
+
+#### JWT-based Authentication
+ตอนวิชาที่แล้ว เราทำทุกอย่างให้อยู่บน backend เราจึงสามารถเช็ค session ได้ แต่ตอนนี้เราแยกออกเป็น front-end และ back-end เมื่อเขามาล็อกอินสำเร็จเราจึงต้องให้บัตรหรืออะไรบางอย่างเพื่อให้เขาส่งมาด้วยทุกครั้งที่มี request ==เรียกว่า TOKEN==
+![Pasted image 20240329093117](./Pasted%20image%2020240329093117.png)
+![Pasted image 20240329093242](./Pasted%20image%2020240329093242.png)
+##### Session based vs Token based
+- A session often lives on a server or a cluster of servers.
+- session จะถูกเก็บไว้ที่เซิฟเวอร์ ทำให้หากมีเซิฟเวอร์หลาย ๆ ตัว ก็ต้อง clone session ไปในทุก ๆ ตัว
+- แต่ Token นั้นจะถูกเก็บไว้ที่ client ทำให้สามารถเข้าถึงเซิฟเวอร์ได้หลายตัว ไม่ต้องให้เซิฟเวอร์จัดการ clone ให้
+![Pasted image 20240329093739](./Pasted%20image%2020240329093739.png)
+##### What is JSON Web Token?
+- มีหลักการก็คือมีการใส่ key  บางอย่างไว้ใน token เพื่อป้องกันการปลอมแปลง
+- ในตัว token ก็จะประกอบไปด้วย ข้อมูลของ user , เวลาที่สร้าง token ( issue date ) , เวลาที่ token หมดอายุ , signature 
+- ผู้ที่สามารถอ่านได้จะต้องมี private key
+- JWT อนุญาตให้เราสามารถเข้ารหัส Token นี้ได้อีก
+##### What is JSON Web Token Structure
+- สีแดงคือ header
+- สีม่วงคือ payload
+- สีฟ้าคือ  signature
+![Pasted image 20240329094204](./Pasted%20image%2020240329094204.png)
+สามารถเข้าไปลองเล่นได้ที่ [JSON Web Tokens - jwt.io](https://jwt.io/)
+![Pasted image 20240329094434](./Pasted%20image%2020240329094434.png)
+##### Spring Boot JWT Example
+มี Spring Security ให้เรียกใช้ ![Pasted image 20240329100023](./Pasted%20image%2020240329100023.png)
